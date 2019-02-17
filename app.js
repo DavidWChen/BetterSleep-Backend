@@ -5,6 +5,7 @@ var wav = require('wav');
 var fs = require('fs');
 var path = require('path');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 
 
 
@@ -21,23 +22,55 @@ app.get('/', function (req, res) {
 //app.use(bodyParser());
 
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
+app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
 
 app.post('/', async function(request, response){
     //get wav from request 
-    var audioFile = path.join('sleep16.wav');
-	var audioFilePath = path.join(__dirname, audioFile);
-	//
-	//var audioFilePath = request.body.uri;
-	//var audioFile = request.files.wav;
-	//fs.writeFile('sample.wav', req.body,
-	// console.log(audioFile);
-	var file = fs.createReadStream(audioFilePath);
-	let res = await streamAudioFile(file);
-	//res = "start_app"
-	//console.log(res);
-	response.status(200).json(res);
+    var audio = request.body;
+    console.log({audio});
+
+    var storage = multer.diskStorage({
+        destination: '/tmp/uploads'
+    });
+    var upload = multer({
+        storage: storage
+    }).any();
+
+    upload(request, response, async function(err) {
+        if (err) {
+            console.log(err);
+            return response.end('Error');
+        } else {
+            //console.log(request.body);
+            var audioFile = request.files[0];
+            var audioFilePath = audioFile.path;
+            var file = fs.createReadStream(audioFilePath);
+			let res = await streamAudioFile(file);
+			response.status(200).json(res);
+// 	        fs.writeFile('sample.wav', req.body);
+// 		// console.log(audioFile);
+// 			var file = fs.createReadStream(audioFilePath);
+// 			let res = await streamAudioFile(file);
+// 		//res = "start_app"
+// 		//console.log(res);
+// 			response.status(200).json(res);
+// // move your file to destination
+//             response.end('File uploaded');
+        }
+    });
+ //    var audioFile = path.join('sleep16.wav');
+	// var audioFilePath = path.join(__dirname, audioFile);
+	// //
+	// //var audioFilePath = request.body.uri;
+	// //var audioFile = request.files.wav;
+	// //fs.writeFile('sample.wav', req.body,
+	// // console.log(audioFile);
+	// var file = fs.createReadStream(audioFilePath);
+	// let res = await streamAudioFile(file);
+	// //res = "start_app"
+	// //console.log(res);
+	// response.status(200).json(res);
 });
 
 
