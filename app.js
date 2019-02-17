@@ -7,8 +7,6 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 
-
-
 //config file
 var configFile = 'config.json';
 var config = require(path.join(__dirname, configFile));
@@ -18,12 +16,7 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-
-//app.use(bodyParser());
-
-
 app.use(bodyParser.urlencoded({extended: true}));
-// app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
 
 app.post('/', async function(request, response){
     //get wav from request 
@@ -42,35 +35,13 @@ app.post('/', async function(request, response){
             console.log(err);
             return response.end('Error');
         } else {
-            //console.log(request.body);
             var audioFile = request.files[0];
             var audioFilePath = audioFile.path;
             var file = fs.createReadStream(audioFilePath);
 			let res = await streamAudioFile(file);
 			response.status(200).json(res);
-// 	        fs.writeFile('sample.wav', req.body);
-// 		// console.log(audioFile);
-// 			var file = fs.createReadStream(audioFilePath);
-// 			let res = await streamAudioFile(file);
-// 		//res = "start_app"
-// 		//console.log(res);
-// 			response.status(200).json(res);
-// // move your file to destination
-//             response.end('File uploaded');
         }
     });
- //    var audioFile = path.join('sleep16.wav');
-	// var audioFilePath = path.join(__dirname, audioFile);
-	// //
-	// //var audioFilePath = request.body.uri;
-	// //var audioFile = request.files.wav;
-	// //fs.writeFile('sample.wav', req.body,
-	// // console.log(audioFile);
-	// var file = fs.createReadStream(audioFilePath);
-	// let res = await streamAudioFile(file);
-	// //res = "start_app"
-	// //console.log(res);
-	// response.status(200).json(res);
 });
 
 
@@ -99,7 +70,6 @@ function streamAudioFile(file) {
         if (response.AllResults && response.AllResults.length) {
       		console.log(response.AllResults[0].WrittenResponse);
       		resolve(response.AllResults[0].WrittenResponse);
-      		// return response.AllResults[0].WrittenResponse;
     	}
       },
 
