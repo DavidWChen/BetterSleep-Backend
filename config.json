@@ -1,0 +1,11 @@
+{
+  
+  "clientId": "PmFCVf89FiVPeprYiXRHNA==",
+  "clientKey": "fKJaIZYiS4cYYCEg8wVSX4XM0UanJ1WuopDLDWjw-C7uv3h_LJZVlHkuHyuYZrtycu_vf-5z1oAvaaRThXHkxg==",
+  
+
+  "https": false,
+  "sslKeyFile": "server.key",
+  "sslCrtFile": "server.crt"  
+
+}
