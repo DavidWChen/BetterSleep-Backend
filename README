@@ -1,0 +1,7 @@
+Backend Node Server for BetterSleep (Houndify Integration)
+
+To run:
+
+npm install
+
+node app.js
